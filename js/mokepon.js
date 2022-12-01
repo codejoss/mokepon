@@ -645,7 +645,6 @@ function revisarcolision(enemigo) {
     detenerMovimiento();
     sectionVerMapa.style.display = 'none'
     seccionAtaque.style.display = 'flex'
-    
     console.log("Se detecto una colision")
     enemigoId = enemigo.id
 

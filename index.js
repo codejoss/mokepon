@@ -5,6 +5,7 @@ const app = express();
 
 
 // ACTIVANDO LIBRERIAS
+app.use(express.static('public'))
 app.use(cors()) // Usando libreria cors para administrar permisos de acceso
 app.use(express.json()) // Habilitando capacidad de recibir contenido formato JSON
 
@@ -109,5 +110,5 @@ app.get("/mokepon/:jugadorId/ataques", (req, res) => {
 
 
 app.listen(8080, () => {
-    console.log("Servidor funcionando")
+    console.log("Server Mokepon Run... Enjoy!!!")
 })

@@ -91,6 +91,7 @@ input:checked+label {
     border: none;
     font-family: 'Silkscreen', cursive;
     font-size: 15px;
+    user-select: none;
 }
 
 .contenedor-ataques {

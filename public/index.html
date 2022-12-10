@@ -36,12 +36,12 @@
             <canvas id="mapa"></canvas>
 
             <div class="btn-movimiento">
-                <button onmouseup="detenerMovimiento()" class="button" onmousedown="moverCapipepoArriba()">Arriba</button>
+                <button ontouchend="detenerMovimiento()" class="button" ontouchstart="moverCapipepoArriba()">Arriba</button>
                 <div class="btn-horizontal">
-                    <button onmouseup="detenerMovimiento()" class="button" onmousedown="moverCapipepoIzquierda()">Izquierda</button>
-                    <button onmouseup="detenerMovimiento()" class="button" onmousedown="moverCapipepoDerecha()">Derecha</button>
+                    <button ontouchend="detenerMovimiento()" class="button" ontouchstart="moverCapipepoIzquierda()">Izquierda</button>
+                    <button ontouchend="detenerMovimiento()" class="button" ontouchstart="moverCapipepoDerecha()">Derecha</button>
                 </div>
-                <button onmouseup="detenerMovimiento()" class="button" onmousedown="moverCapipepoAbajo()">Abajo</button>
+                <button ontouchend="detenerMovimiento()" class="button" ontouchstart="moverCapipepoAbajo()">Abajo</button>
             </div>
         </section>
 
@@ -91,7 +91,7 @@
     </div>
 
     <!-- SCRIPTS - USUALMENTE SE COLOCA AL FINAL PARA AYUDAR AL PERFORMANCE-->
-    <script src="./js/mokepon.js"></script>
+    <script src="./mokepon.js"></script>
 </body>
 
 </html>

@@ -1,5 +1,17 @@
 // Variables globales ---------
 
+// Server configuration - automatically detect environment
+const getServerUrl = () => {
+    // For development, use localhost
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return 'http://localhost:8080';
+    }
+    // For production, use the current host
+    return `${window.location.protocol}//${window.location.hostname}:8080`;
+};
+
+const SERVER_URL = getServerUrl();
+
 // Elementos HTML
 const botonMascotaJugador = document.getElementById('boton-mascota') //Inicializa boton
 
@@ -68,11 +80,7 @@ let lienzo = mapa.getContext('2d');
 
 let intervalo;
 let mapaBackground = new Image();
-<<<<<<< HEAD:js/mokepon.js
-mapaBackground.src = "../assets/img/mokemap.png"
-=======
 mapaBackground.src = "assets/img/mokemap.png"
->>>>>>> 0a0a70bd8087dad6f75b86066fdca103ef173b49:public/mokepon.js
 
 let alturaQueBuscamos;
 let anchoDelMapa = window.innerWidth - 50;
@@ -94,21 +102,12 @@ mapa.height = alturaQueBuscamos;
 
 
 
-<<<<<<< HEAD:js/mokepon.js
-const capipepoimg = '../assets/img/capipepo.png';
-const hipodogeimg = '../assets/img/hipodoge.png';
-const ratigueyaimg = '../assets/img/ratigueya.png';
-
-const ashFoto = "../assets/img/ash.png";
-const garyOakFoto = "../assets/img/Gary_Oak.png";
-=======
 const capipepoimg = 'assets/img/capipepo.png';
 const hipodogeimg = 'assets/img/hipodoge.png';
 const ratigueyaimg = 'assets/img/ratigueya.png';
 
 const ashFoto = "assets/img/ash.png";
-const garyOakFoto = "sassets/img/Gary_Oak.png";
->>>>>>> 0a0a70bd8087dad6f75b86066fdca103ef173b49:public/mokepon.js
+const garyOakFoto = "assets/img/Gary_Oak.png";
 
 // ---------------------------
 
@@ -234,7 +233,7 @@ function iniciarJuego() {
 
 
 function unirseAlJuego() {
-    fetch("http://MacBook-Air-de-Josue.local:8080/unirse").then(function (res) {
+    fetch(`${SERVER_URL}/unirse`).then(function (res) {
             console.log(res)
             if (res.ok) {
                 res.text().then(function(respuesta) {
@@ -291,7 +290,7 @@ function seleccionarMascotaJugador() {
 
 // FUNCION QUE PERMITE ENVIAR AL BACKEND EL ID DEL MOKEPON SELECCIONADO
 function seleccionarMokepon(mascotaJugador) {
-    fetch(`http://MacBook-Air-de-Josue.local:8080/mokepon/${jugadorId}`, {
+    fetch(`${SERVER_URL}/mokepon/${jugadorId}`, {
         method: "post",
         headers: {
             "Content-Type": "application/json"
@@ -357,7 +356,7 @@ function secuenciaAtaque() {
 
 
 function enviarAtaques(){
-    fetch(`http://MacBook-Air-de-Josue.local:8080/mokepon/${jugadorId}/ataques`, {
+    fetch(`${SERVER_URL}/mokepon/${jugadorId}/ataques`, {
         method: "post",
         headers:{
             "Content-Type": "application/json"
@@ -371,7 +370,7 @@ function enviarAtaques(){
 }
 
 function obtenerAtaques() {
-    fetch(`http://MacBook-Air-de-Josue.local:8080/mokepon/${enemigoId}/ataques`)
+    fetch(`${SERVER_URL}/mokepon/${enemigoId}/ataques`)
         .then(function (res) {
             if (res.ok){
                 res.json()
@@ -535,7 +534,7 @@ function pintarCanvas() {
 }
 
 function enviarPosicion(x, y) {
-    fetch(`http://MacBook-Air-de-Josue.local:8080/mokepon/${jugadorId}/posicion`, {
+    fetch(`${SERVER_URL}/mokepon/${jugadorId}/posicion`, {
         method: "post",
         headers: {
             "Content-type": "application/json"},

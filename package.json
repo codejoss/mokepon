@@ -4,7 +4,10 @@
   "description": "Juego de batalla Mokepon",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install-dev": "npm install -g nodemon"
   },
   "author": "Josue Quevedo Portas",
   "license": "ISC",

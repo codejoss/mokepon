@@ -1,0 +1,220 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500;700&family=Silkscreen:wght@400;700&display=swap');
+
+:root {
+    --color-fondo: #06283D;
+    --color-principal: #256D85;
+    --color-secundario: #47B5FF;
+    --color-texto: #DFF6FF;
+
+    --button-color: orange;
+
+    --font-bold: 700;
+    --font-regular: 300;
+}
+
+body {
+    background-color: var(--color-fondo);
+    font-family: 'Quicksand', sans-serif;
+    font-family: 'Silkscreen', cursive;
+}
+
+h1, h2, p, label {
+    color: var(--color-texto);
+}
+
+/* ESTILOS PROPIOS */
+
+
+.pet-selection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+input {
+    display: none;
+}
+
+input:checked+label {
+    background-color: var(--color-secundario);
+}
+
+.title {
+    color: var(--color-principal);
+    text-align: center;
+    font-weight: var(--font-bold);
+    font-size: 10vw;
+    margin: 0%;
+}
+
+.subtitle {
+    font-size: 36px;
+    text-align: center;
+}
+
+
+/* SECCION SELECCION MASCOT */
+
+.cards {
+    display: flex;
+    gap: 10px;
+}
+
+.pet-cards {
+    width: 230px;
+    height: 100px;
+    background-color: var(--color-principal);
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pet-cards:hover {
+    background-color: var(--color-secundario);
+    color: var(--color-fondo);
+}
+
+.pet-cards img {
+    width: 80px;
+    margin-left: 10px;
+}
+
+.button {
+    background-color: var(--button-color);
+    width: 180px;
+    height: 40px;
+    border-radius: 10px;
+    border: none;
+    font-family: 'Silkscreen', cursive;
+    font-size: 15px;
+    user-select: none;
+}
+
+.contenedor-ataques {
+    width: 60%;
+}
+
+.botones-ataque {
+    width: 100%;
+    display: flex;
+    align-content: center;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+
+    gap: 10px;
+    
+}
+
+
+
+.button:hover {
+    background-color: var(--color-secundario);
+    color: var(--color-fondo);
+}
+
+.pet-selection .button{
+    margin-top: 40px;
+}
+
+/* SECCION ATAQUE */
+
+#seleccionar-ataque {
+    flex-direction: column;
+    align-items: center;
+}
+
+#mensajes {
+    width: 300px;
+    background-color: var(--color-principal);
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.ataques {
+    display: grid;
+    grid-template-columns: 300px 300px;
+    gap: 100px;
+    text-align: center;
+}
+
+.card-ataques {
+    background-color: var(--button-color);
+    border-radius: 20px;
+    margin-top: 30px;
+    width: 100%;
+}
+
+.ataques p {
+    color: #000000;
+}
+
+.big-font {
+    font-size: 3vh;
+    font-weight: var(--font-bold);
+}
+
+#ver-mapa {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-movimiento {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+
+.btn-horizontal {
+  display: flex;
+  gap: 15px;
+}
+
+#mapa {
+    border: 2px solid white;
+}
+
+
+/* MEDIA QUERY */
+
+@media (max-width: 960px) {
+
+    .cards {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .botones-ataque {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .big-font {
+        font-weight: var(--font-bold);
+    } 
+}
+
+@media (max-width: 730px) {
+    .ataques {
+        display: grid;
+        grid-template-columns: 150px 150px;
+        row-gap: 10px;
+    }
+    .big-font {
+        font-size: 2vh;
+    }
+
+}

@@ -37,12 +37,36 @@
             <canvas id="mapa"></canvas>
 
             <div class="btn-movimiento">
-                <button ontouchend="detenerMovimiento()" class="button" ontouchstart="moverCapipepoArriba()">Arriba</button>
+                <button 
+                    class="button" 
+                    onmousedown="moverCapipepoArriba()" 
+                    onmouseup="detenerMovimiento()" 
+                    onmouseleave="detenerMovimiento()"
+                    ontouchstart="moverCapipepoArriba()" 
+                    ontouchend="detenerMovimiento()">Arriba</button>
                 <div class="btn-horizontal">
-                    <button ontouchend="detenerMovimiento()" class="button" ontouchstart="moverCapipepoIzquierda()">Izquierda</button>
-                    <button ontouchend="detenerMovimiento()" class="button" ontouchstart="moverCapipepoDerecha()">Derecha</button>
+                    <button 
+                        class="button" 
+                        onmousedown="moverCapipepoIzquierda()" 
+                        onmouseup="detenerMovimiento()" 
+                        onmouseleave="detenerMovimiento()"
+                        ontouchstart="moverCapipepoIzquierda()" 
+                        ontouchend="detenerMovimiento()">Izquierda</button>
+                    <button 
+                        class="button" 
+                        onmousedown="moverCapipepoDerecha()" 
+                        onmouseup="detenerMovimiento()" 
+                        onmouseleave="detenerMovimiento()"
+                        ontouchstart="moverCapipepoDerecha()" 
+                        ontouchend="detenerMovimiento()">Derecha</button>
                 </div>
-                <button ontouchend="detenerMovimiento()" class="button" ontouchstart="moverCapipepoAbajo()">Abajo</button>
+                <button 
+                    class="button" 
+                    onmousedown="moverCapipepoAbajo()" 
+                    onmouseup="detenerMovimiento()" 
+                    onmouseleave="detenerMovimiento()"
+                    ontouchstart="moverCapipepoAbajo()" 
+                    ontouchend="detenerMovimiento()">Abajo</button>
             </div>
         </section>
 

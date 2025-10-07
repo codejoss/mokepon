@@ -116,7 +116,7 @@ const garyOakFoto = "assets/img/Gary_Oak.png";
 class Mokepon {
     
     constructor(nombre, foto, mapaFoto, x, y, id = null) {
-        this.id = this.id
+        this.id = id
         this.nombre = nombre
         this.foto = foto
         this.ataques = []
@@ -163,16 +163,16 @@ const HIPODOGE_ATAQUES = [
 ]
 
 const CAPIPEPO_ATAQUES = [
-    {nombre: 'hierva', id: 'boton-agua'},
-    {nombre: 'hierva', id: 'boton-agua'},
+    {nombre: 'hierva', id: 'boton-hierva'},
+    {nombre: 'hierva', id: 'boton-hierva'},
     {nombre: 'hierva', id: 'boton-hierva'},
     {nombre: 'agua', id: 'boton-agua'},
     {nombre: 'fuego', id: 'boton-fuego'}
 ]
 
 const RATIGUEYA_ATAQUES = [
-    {nombre: 'fuego', id: 'boton-agua'},
-    {nombre: 'fuego', id: 'boton-agua'},
+    {nombre: 'fuego', id: 'boton-fuego'},
+    {nombre: 'fuego', id: 'boton-fuego'},
     {nombre: 'fuego', id: 'boton-fuego'},
     {nombre: 'agua', id: 'boton-agua'},
     {nombre: 'hierva', id: 'boton-hierva'}
@@ -200,6 +200,7 @@ function iniciarJuego() {
     seccionAtaque.style.display = 'none';
     botonReiniciar.style.display = 'none';
     sectionVerMapa.style.display = 'none';
+    seccionMascota.style.display = 'flex';
 
 
 
@@ -233,15 +234,10 @@ function iniciarJuego() {
 
 
 function unirseAlJuego() {
-    fetch(`${SERVER_URL}/unirse`).then(function (res) {
-            console.log(res)
-            if (res.ok) {
-                res.text().then(function(respuesta) {
-                        console.log(respuesta)
-                        jugadorId = respuesta
-                    })
-            }
-        })
+    // Generate a local player ID for offline play
+    jugadorId = `offline_${Math.random().toString(36).substr(2, 9)}`;
+    console.log('Playing in offline mode. Player ID:', jugadorId);
+    // Note: Multiplayer features require a separate backend server
 }
 
 
@@ -290,6 +286,10 @@ function seleccionarMascotaJugador() {
 
 // FUNCION QUE PERMITE ENVIAR AL BACKEND EL ID DEL MOKEPON SELECCIONADO
 function seleccionarMokepon(mascotaJugador) {
+    console.log('Selected Mokepon (offline mode):', mascotaJugador);
+    // Note: Server communication disabled for offline play
+    // Uncomment the fetch code below when backend server is available
+    /*
     fetch(`${SERVER_URL}/mokepon/${jugadorId}`, {
         method: "post",
         headers: {
@@ -299,6 +299,7 @@ function seleccionarMokepon(mascotaJugador) {
             mokepon: mascotaJugador
         })
     })
+    */
 }
 
 
@@ -314,80 +315,131 @@ function extraerAtaques(mascotaJugador) {
 }
 
 function mostrarAtaques(ataques) {
-    ataques.forEach((ataque) => {
-        opcionAtaques = `
-            <button class="button BAtaque"  id=${ataque.id}>${ataque.nombre}</button>
-        `
-        contenedorAtaques.innerHTML += opcionAtaques;
-
-    })
-
-    botonFuego = document.getElementById('boton-fuego');
-    botonAgua = document.getElementById('boton-agua');
-    botonhierva = document.getElementById('boton-hierva');
-    botones = document.querySelectorAll('.BAtaque');
-
-    console.log(botones);
+    // This function is now handled by secuenciaAtaque
+    // Just store the attacks for reference
+    console.log('Attacks for', mascotaJugador, ':', ataques);
 }
 
 // ATAQUE JUGADOR
 function secuenciaAtaque() {
-    botones.forEach((boton) => {
-        boton.addEventListener('click', (e) =>{
-            if (e.target.textContent === 'fuego'){
-                arrayAtaqueJugador.push('fuego');
-                console.log("JUGADOR: " + arrayAtaqueJugador);
-                boton.disabled = true;
-            }else if (e.target.textContent === 'agua') {
-                arrayAtaqueJugador.push('agua');
-                console.log("JUGADOR: " + arrayAtaqueJugador);
-                boton.disabled = true;
-            }else {
-                arrayAtaqueJugador.push('hierva');
-                console.log("JUGADOR: " + arrayAtaqueJugador);
-                boton.disabled = true;
-            }
-            if (arrayAtaqueJugador.length === 5){
-                enviarAtaques()
-            }
-        } )
-    })
+    console.log('Setting up attack sequence');
+    
+    // Clear the container and rebuild buttons to avoid multiple listeners
+    contenedorAtaques.innerHTML = '';
+    
+    // Get the current pet's attacks
+    let ataquesMascota;
+    for (let i = 0; i < mokepones.length; i++) {
+        if (mascotaJugador === mokepones[i].nombre) {
+            ataquesMascota = mokepones[i].ataques;
+            break;
+        }
+    }
+    
+    // Rebuild attack buttons
+    if (ataquesMascota) {
+        ataquesMascota.forEach((ataque) => {
+            const botonAtaque = document.createElement('button');
+            botonAtaque.className = 'button BAtaque';
+            botonAtaque.id = ataque.id;
+            botonAtaque.textContent = ataque.nombre;
+            
+            // Add event listener directly
+            botonAtaque.addEventListener('click', function(e) {
+                if (!this.disabled && arrayAtaqueJugador.length < 5) {
+                    const tipoAtaque = this.textContent;
+                    
+                    arrayAtaqueJugador.push(tipoAtaque);
+                    console.log("JUGADOR: " + arrayAtaqueJugador);
+                    this.disabled = true;
+                    
+                    if (arrayAtaqueJugador.length === 5) {
+                        enviarAtaques();
+                    }
+                }
+            });
+            
+            contenedorAtaques.appendChild(botonAtaque);
+        });
+    }
+    
+    // Update button references
+    botones = document.querySelectorAll('.BAtaque');
+    console.log('Attack buttons created:', botones.length);
 }
 
 
 function enviarAtaques(){
-    fetch(`${SERVER_URL}/mokepon/${jugadorId}/ataques`, {
-        method: "post",
-        headers:{
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            ataques: arrayAtaqueJugador
-        })
-    })
-
-    intervalo = setInterval(obtenerAtaques, 50)
+    console.log('Player attacks selected (offline mode):', arrayAtaqueJugador);
+    
+    // Validate that we have exactly 5 attacks
+    if (arrayAtaqueJugador.length !== 5) {
+        console.error('Error: arrayAtaqueJugador should have exactly 5 attacks, but has:', arrayAtaqueJugador.length);
+        console.log('Current attacks:', arrayAtaqueJugador);
+        // Reset and return to prevent invalid battle
+        arrayAtaqueJugador = [];
+        // Re-enable all buttons
+        botones.forEach(boton => boton.disabled = false);
+        return;
+    }
+    
+    // Generate random enemy attacks for offline play
+    generarAtaquesEnemigo();
+    // Start combat immediately in offline mode - only call iniciarPelea which calls combat
+    iniciarPelea();
 }
 
+function generarAtaquesEnemigo() {
+    // Generate 5 random attacks for the enemy
+    const tiposAtaque = ['fuego', 'agua', 'hierva'];
+    arrayAtaqueEnemigo = [];
+    for (let i = 0; i < 5; i++) {
+        const ataqueAleatorio = tiposAtaque[aleatorio(0, tiposAtaque.length - 1)];
+        arrayAtaqueEnemigo.push(ataqueAleatorio);
+    }
+    console.log('Enemy attacks generated (offline mode):', arrayAtaqueEnemigo);
+}
+
+// Legacy function - kept for compatibility but not used in offline mode
 function obtenerAtaques() {
-    fetch(`${SERVER_URL}/mokepon/${enemigoId}/ataques`)
-        .then(function (res) {
-            if (res.ok){
-                res.json()
-                    .then(function ({ ataques }){
-                        if (ataques.length === 5){
-                            arrayAtaqueEnemigo = ataques
-                            combat()
-                        }
-                    })
-            }
-        })
+    console.log('obtenerAtaques called but not needed in offline mode');
 }
 
 // Seleccion aleatoria de mascota de la PC
 function seleccionarMascotaEnemigo(enemigo) {
-    spanMascotaEnemigo.innerHTML = enemigo.nombre
-    ataquesMokeponEnemigo = enemigo.ataques
+    console.log('Starting new battle - clearing previous state');
+    console.log('Previous arrayAtaqueJugador:', arrayAtaqueJugador);
+    console.log('Previous arrayAtaqueEnemigo:', arrayAtaqueEnemigo);
+    
+    // Clear previous battle data
+    arrayAtaqueJugador = [];
+    arrayAtaqueEnemigo = [];
+    puntosJugador = 0;
+    puntosEnemigo = 0;
+    
+    console.log('After reset - arrayAtaqueJugador:', arrayAtaqueJugador);
+    console.log('After reset - arrayAtaqueEnemigo:', arrayAtaqueEnemigo);
+    
+    // Use the provided enemy object or generate a random one for offline play
+    if (enemigo && enemigo.nombre && enemigo.ataques) {
+        spanMascotaEnemigo.innerHTML = enemigo.nombre;
+        ataquesMokeponEnemigo = enemigo.ataques;
+    } else {
+        // Generate random enemy for offline combat
+        const tiposMokepon = ['hipodoge', 'capipepo', 'ratigueya'];
+        const enemigoAleatorio = tiposMokepon[aleatorio(0, tiposMokepon.length - 1)];
+        spanMascotaEnemigo.innerHTML = enemigoAleatorio;
+        
+        // Set enemy attacks based on type
+        if (enemigoAleatorio === 'hipodoge') {
+            ataquesMokeponEnemigo = HIPODOGE_ATAQUES;
+        } else if (enemigoAleatorio === 'capipepo') {
+            ataquesMokeponEnemigo = CAPIPEPO_ATAQUES;
+        } else if (enemigoAleatorio === 'ratigueya') {
+            ataquesMokeponEnemigo = RATIGUEYA_ATAQUES;
+        }
+    }
+    
     secuenciaAtaque()
     
 } // --------------------------
@@ -415,6 +467,10 @@ function seleccionarMascotaEnemigo(enemigo) {
 
 function iniciarPelea() {
     console.log("Pelea INICIADA")
+    // Clear previous attack displays
+    ataquesDelJugador.innerHTML = '';
+    ataquesDelEnemigo.innerHTML = '';
+    
     combat();
     verificarPuntos();
     puntosJugadores()
@@ -452,9 +508,9 @@ function mensajeFinal(resultadoFinal) {
 function verificarPuntos() {
     if (puntosJugador > puntosEnemigo) {
         mensajeFinal("GANASTE EL JUEGO 🎉");
-    }if (puntosJugador < puntosEnemigo) {
+    } else if (puntosJugador < puntosEnemigo) {
         mensajeFinal("PERDISTE EL JUEGO 😢");
-    }if (puntosJugador === puntosEnemigo){
+    } else if (puntosJugador === puntosEnemigo){
         mensajeFinal("JUEGO EMPATADO ⛔️")
     }
 }
@@ -505,15 +561,60 @@ function iniciarMapa() {
 
     mascotaJugadorObjeto = obtenerObjetoMascota(mascotaJugador);
 
+    // Make canvas focusable and focus it for keyboard controls
+    mapa.setAttribute('tabindex', '0');
+    mapa.focus();
+    
+    // Add game-active class to prevent page scrolling
+    document.body.classList.add('game-active');
+
     intervalo = setInterval(pintarCanvas, 30)
 
     window.addEventListener('keydown', sePresionoUnaTecla);
     window.addEventListener('keyup', detenerMovimiento);
+    
+    // Add click event to canvas for easy battle trigger in offline mode
+    mapa.addEventListener('click', function() {
+        if (mokeponesEnemigo.length > 0) {
+            console.log('Canvas clicked - starting battle!');
+            iniciarBatallaOffline();
+        }
+    });
+}
+
+// Function to start battle in offline mode
+function iniciarBatallaOffline() {
+    clearInterval(intervalo);
+    detenerMovimiento();
+    // Remove game-active class to restore normal page scrolling
+    document.body.classList.remove('game-active');
+    sectionVerMapa.style.display = 'none'
+    seccionAtaque.style.display = 'flex'
+    console.log("Iniciando batalla offline");
+    
+    // Generate a random enemy for battle
+    seleccionarMascotaEnemigo(null); // Pass null to trigger random enemy generation
 }
 
 function pintarCanvas() {
+    // Update position
     mascotaJugadorObjeto.x = mascotaJugadorObjeto.x + mascotaJugadorObjeto.velocidadX;
     mascotaJugadorObjeto.y = mascotaJugadorObjeto.y + mascotaJugadorObjeto.velocidadY;
+    
+    // Boundary collision detection - keep player within map bounds
+    if (mascotaJugadorObjeto.x < 0) {
+        mascotaJugadorObjeto.x = 0;
+    }
+    if (mascotaJugadorObjeto.y < 0) {
+        mascotaJugadorObjeto.y = 0;
+    }
+    if (mascotaJugadorObjeto.x > mapa.width - mascotaJugadorObjeto.width) {
+        mascotaJugadorObjeto.x = mapa.width - mascotaJugadorObjeto.width;
+    }
+    if (mascotaJugadorObjeto.y > mapa.height - mascotaJugadorObjeto.height) {
+        mascotaJugadorObjeto.y = mapa.height - mascotaJugadorObjeto.height;
+    }
+    
     lienzo.clearRect(0, 0, mapa.width, mapa.height);
     // Dibuja fondo
     lienzo.drawImage(
@@ -534,46 +635,48 @@ function pintarCanvas() {
 }
 
 function enviarPosicion(x, y) {
-    fetch(`${SERVER_URL}/mokepon/${jugadorId}/posicion`, {
-        method: "post",
-        headers: {
-            "Content-type": "application/json"},
-            body: JSON.stringify({
-                x,
-                y
-            })
-    })
+    // Offline mode - generate local enemies if not already created
+    if (mokeponesEnemigo.length === 0) {
+        generarEnemigosLocales();
+    }
+    // Note: Position sync disabled for offline play
+    console.log('Player position (offline mode):', {x, y});
+}
 
-    .then(function (res) {
-        if (res.ok) {
-            res.json()
-            .then(function ({enemigos}){
-                console.log(enemigos)
-
-                
-                mokeponesEnemigo = enemigos.map(function (enemigo){
-                    let mokeponEnemigo = null
-                    if (enemigo.mokepon != undefined) {
-
-                    const mokeponNombre = enemigo.mokepon.nombre || ""
-
-                    if (mokeponNombre === "hipodoge"){
-                        mokeponEnemigo = new Mokepon('hipodoge', hipodogeimg, hipodogeimg, enemigo.id)
-                    } else if (mokeponNombre === "capipepo") {
-                        mokeponEnemigo = new Mokepon('capipepo', capipepoimg , capipepoimg, enemigo.id)
-                    } else if (mokeponNombre === "ratigueya") {
-                        mokeponEnemigo = new Mokepon('ratigueya', ratigueyaimg, ratigueyaimg, enemigo.id)
-                    }                    
-                    mokeponEnemigo.x = enemigo.x
-                    mokeponEnemigo.y = enemigo.y
-                    
-                    return mokeponEnemigo
-                }
-                })
-
-            })
+function generarEnemigosLocales() {
+    // Generate 2-3 random enemies for single-player mode
+    const numEnemigos = aleatorio(2, 3);
+    const tiposMokepon = ['hipodoge', 'capipepo', 'ratigueya'];
+    const imagenesMap = {
+        'hipodoge': hipodogeimg,
+        'capipepo': capipepoimg, 
+        'ratigueya': ratigueyaimg
+    };
+    
+    mokeponesEnemigo = [];
+    for (let i = 0; i < numEnemigos; i++) {
+        const tipoAleatorio = tiposMokepon[aleatorio(0, tiposMokepon.length - 1)];
+        const enemigo = new Mokepon(
+            tipoAleatorio, 
+            imagenesMap[tipoAleatorio], 
+            imagenesMap[tipoAleatorio],
+            0, 0, // x, y will be set by constructor randomly
+            `enemy_${i + 1}`
+        );
+        
+        // Assign attacks based on type
+        if (tipoAleatorio === 'hipodoge') {
+            enemigo.ataques = [...HIPODOGE_ATAQUES];
+        } else if (tipoAleatorio === 'capipepo') {
+            enemigo.ataques = [...CAPIPEPO_ATAQUES];
+        } else if (tipoAleatorio === 'ratigueya') {
+            enemigo.ataques = [...RATIGUEYA_ATAQUES];
         }
-    })
+        
+        mokeponesEnemigo.push(enemigo);
+    }
+    
+    console.log('Generated local enemies:', mokeponesEnemigo);
 }
 
 // MOVIMIENTO DE PERSONAJES
@@ -606,18 +709,22 @@ function detenerMovimiento() {
 function sePresionoUnaTecla(event) {
     switch (event.key) {
         case 'ArrowUp':
+            event.preventDefault(); // Prevent page scrolling
             moverCapipepoArriba();
             break;
 
         case 'ArrowDown':
+            event.preventDefault(); // Prevent page scrolling
             moverCapipepoAbajo();
             break;
 
         case 'ArrowRight':
+            event.preventDefault(); // Prevent page scrolling
             moverCapipepoDerecha();
             break;
 
         case 'ArrowLeft':
+            event.preventDefault(); // Prevent page scrolling
             moverCapipepoIzquierda();
             break;
     
@@ -643,7 +750,7 @@ function revisarcolision(enemigo) {
     const arribaMascota = mascotaJugadorObjeto.y;
     const abajoMascota = mascotaJugadorObjeto.y + (mascotaJugadorObjeto.height - 25);
     const izquierdaMascota = mascotaJugadorObjeto.x;
-    const derechaMascota = mascotaJugadorObjeto.x + (enemigo.width - 25);
+    const derechaMascota = mascotaJugadorObjeto.x + (mascotaJugadorObjeto.width - 25);
 
     if(
         abajoMascota < arribaEnemigo ||
@@ -656,6 +763,8 @@ function revisarcolision(enemigo) {
     
     clearInterval(intervalo);
     detenerMovimiento();
+    // Remove game-active class to restore normal page scrolling
+    document.body.classList.remove('game-active');
     sectionVerMapa.style.display = 'none'
     seccionAtaque.style.display = 'flex'
     console.log("Se detecto una colision")

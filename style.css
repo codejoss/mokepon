@@ -16,6 +16,12 @@ body {
     background-color: var(--color-fondo);
     font-family: 'Quicksand', sans-serif;
     font-family: 'Silkscreen', cursive;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Prevent page scrolling when game is active */
+body.game-active {
+    overflow: hidden;
 }
 
 h1, h2, p, label {
@@ -26,10 +32,18 @@ h1, h2, p, label {
 
 
 .pet-selection {
+    display: none; /* Initially hidden, will be shown by JavaScript */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-card {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    min-height: 100vh;
 }
 
 input {
@@ -123,6 +137,7 @@ input:checked+label {
 /* SECCION ATAQUE */
 
 #seleccionar-ataque {
+    display: none; /* Initially hidden */
     flex-direction: column;
     align-items: center;
 }
@@ -163,6 +178,7 @@ input:checked+label {
 }
 
 #ver-mapa {
+    display: none; /* Initially hidden */
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -184,6 +200,12 @@ input:checked+label {
 
 #mapa {
     border: 2px solid white;
+    outline: none; /* Remove browser focus outline */
+    cursor: crosshair; /* Show crosshair cursor for better UX */
+}
+
+#mapa:focus {
+    border: 2px solid var(--color-secundario); /* Highlight when focused */
 }
 
 

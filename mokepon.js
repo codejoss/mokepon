@@ -478,8 +478,8 @@ function iniciarPelea() {
 
 function puntosJugadores() {
     
-    spanPuntosJugador.innerHTML = puntosJugador;
-    spanPuntosEnemigo.innerHTML = puntosEnemigo;
+    spanPuntosJugador.innerHTML = `${puntosJugador} PTS`;
+    spanPuntosEnemigo.innerHTML = `${puntosEnemigo} PTS`;
 
 }
 

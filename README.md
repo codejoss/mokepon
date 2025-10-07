@@ -15,3 +15,5 @@ Inicia con un pequeño mapa al estilo de Pokémon, donde el jugador podrá mover
 - **JavaScript**: Utilizado para la lógica del juego, la interacción del usuario y la manipulación del DOM.
 
 Espero que disfrutes explorando este proyecto tanto como yo disfruté creándolo! Si tienes alguna pregunta o sugerencia, no dudes en ponerte en contacto conmigo.
+
+Probar demo: [DEMO](https://codejoss.github.io/mokepon/)

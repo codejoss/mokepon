@@ -574,12 +574,12 @@ function iniciarMapa() {
     window.addEventListener('keyup', detenerMovimiento);
     
     // Add click event to canvas for easy battle trigger in offline mode
-    mapa.addEventListener('click', function() {
+    /* mapa.addEventListener('click', function() {
         if (mokeponesEnemigo.length > 0) {
             console.log('Canvas clicked - starting battle!');
             iniciarBatallaOffline();
         }
-    });
+    }); */
 }
 
 // Function to start battle in offline mode
